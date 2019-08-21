@@ -1,0 +1,29 @@
+{
+  "name": "instaverse-api",
+  "description": "Instagram's API, reverse-engineered.",
+  "version": "1.0.0",
+
+  "authors": "Damiano Magrini <damiano.magrini@gmail.com>",
+  "license": "CC-BY-NC-SA-4.0",
+
+
+  "scripts": {},
+
+
+  "dependencies": {
+    "alea": "latest",
+    "core-js": "latest",
+    "debug":"latest",
+    "exif-js": "latest",
+    "immutable": "latest",
+    "qwest": "latest",
+    "ua-parser-js": "latest"
+  },
+
+  "devDependencies": {
+    "@types/core-js": "latest",
+    "@types/ua-parser-js": "latest",
+    "ts-node": "latest",
+    "typescript": "latest"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "include": ["**/*.ts"],
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+    "target": "esnext",
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "paths": {
+      "@fbts/*": ["fbts/*"],
+      "*": ["./*", "@types/*", "node_modules/@types/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

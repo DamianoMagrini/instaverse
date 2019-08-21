@@ -1,0 +1,16 @@
+# Editor configuration, see http://editorconfig.org
+# Please don't edit :)
+# I mean, don't edit in the repo: of course if you download it for your own use and you don't like something...
+# You still can't edit it.
+# Mwahaha!
+# How evil.
+
+root = true
+
+[*]
+charset = UTF-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
