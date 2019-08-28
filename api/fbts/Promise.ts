@@ -6,4 +6,4 @@
  *
  * @providesModule Promise
  */
-export default require('promise');
+export { default } from 'promise';

@@ -37,9 +37,9 @@ interface State {
 }
 
 export interface ExtendedEvent {
-  time: number;
-  description: string;
-  extra: any;
+  time?: number;
+  description?: string;
+  extra?: any;
   [key: string]: any;
 }
 

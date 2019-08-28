@@ -6,6 +6,14 @@
   "authors": "Damiano Magrini <damiano.magrini@gmail.com>",
   "license": "CC-BY-NC-SA-4.0",
 
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DamianoMagrini/instaverse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DamianoMagrini/instaverse/issues"
+  },
+
 
   "scripts": {},
 
@@ -16,12 +24,20 @@
     "debug":"latest",
     "exif-js": "latest",
     "immutable": "latest",
+    "isomorphic-fetch": "latest",
+    "promise": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "setimmediate": "latest",
     "qwest": "latest",
     "ua-parser-js": "latest"
   },
 
   "devDependencies": {
     "@types/core-js": "latest",
+    "@types/isomorphic-fetch": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "@types/ua-parser-js": "latest",
     "ts-node": "latest",
     "typescript": "latest"

@@ -43,7 +43,7 @@ interface EventMetadata {
   callback?: Function;
 }
 
-export type BanzaiEvent = [string, ExtendedEvent | object, number, number] & {
+export type BanzaiEvent = [string, ExtendedEvent, number, number] & {
   __meta?: EventMetadata;
 };
 
@@ -104,7 +104,7 @@ const register_event = (event: BanzaiEvent, status_code: number) => {
 
 const create_event = (
   name: string,
-  event: ExtendedEvent | object,
+  event: ExtendedEvent,
   lifetime: number,
   retry?: boolean
 ) => {

@@ -1,10 +1,11 @@
 import invariant from './invariant';
 
-const parent = (node) => Math.floor(node / 2);
+const parent = (node: number) => Math.floor(node / 2);
 
-const Int32Array =
-  global.Int32Array ||
-  function(size: number): Array<number> {
+// Forgive me.
+const int_32_array = Int32Array || ((<unknown>((
+    size: number
+  ): Array<number> => {
     const xs = [];
 
     for (let i = size - 1; i >= 0; --i) {
@@ -12,7 +13,7 @@ const Int32Array =
     }
 
     return xs;
-  };
+  })) as Int32ArrayConstructor);
 
 /**
  * Computes the next power of 2 after or equal to x.
@@ -61,7 +62,7 @@ class PrefixIntervalTree {
   constructor(xs: Array<number>) {
     this._size = xs.length;
     this._half = ceilLog2(this._size);
-    this._heap = new Int32Array(2 * this._half);
+    this._heap = new int_32_array(2 * this._half);
     let i;
 
     for (i = 0; i < this._size; ++i) {

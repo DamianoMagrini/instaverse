@@ -3,27 +3,35 @@
 /**
  * @module debug-extended
  *
+ * An extension to the `debug` module.
+ *
  * Dependencies:
  *  - debug (former 11, now node_module)
  */
 
 import debug from 'debug';
 
-exports = debug;
+const debug_extended = debug as typeof debug & {
+  formatArgs: (...args: string[]) => string[];
+  save: (value: any) => void;
+  useColors: () => boolean;
+  storage: Storage;
+  colors: string[];
+  stringify: (value: any) => string;
+};
 
-function load(): string {
+export const load = (): string => {
   let is_debug: string;
 
   try {
-    is_debug = exports.storage.debug;
+    is_debug = debug_extended.storage.debug;
   } catch {}
-  if ('env' in (typeof process === 'undefined' ? {} : process))
-    is_debug = process.env.DEBUG;
+  if ('env' in (process || {})) is_debug = process.env.DEBUG;
 
   return is_debug;
-}
+};
 
-exports.log = function(): void {
+debug_extended.log = function(): void {
   return (
     typeof console === 'object' &&
     console.log &&
@@ -31,7 +39,7 @@ exports.log = function(): void {
   );
 };
 
-exports.formatArgs = function(...args: string[]) {
+debug_extended.formatArgs = (...args: string[]): string[] => {
   const use_colors = this.useColors;
   args[0] =
     (use_colors ? '%c' : '') +
@@ -40,7 +48,7 @@ exports.formatArgs = function(...args: string[]) {
     args[0] +
     (use_colors ? '%c ' : ' ') +
     '+' +
-    debug.humanize(this.diff);
+    debug_extended.humanize(this.diff);
   if (!use_colors) return args;
 
   const color_string = 'color: ' + this.color;
@@ -62,24 +70,21 @@ exports.formatArgs = function(...args: string[]) {
   return args;
 };
 
-exports.save = function(value: any): void {
+debug_extended.save = function(value: any): void {
   try {
-    if (value === null) exports.storage.removeItem('debug');
-    else exports.storage.debug = value;
+    if (value === null) debug_extended.storage.removeItem('debug');
+    else debug_extended.storage.debug = value;
   } catch {}
 };
 
-exports.load = load;
-
-exports.useColors = (): boolean =>
-  (typeof document !== 'undefined' &&
-    'WebkitAppearance' in document.documentElement.style) ||
+debug_extended.useColors = (): boolean =>
+  (document && 'WebkitAppearance' in document.documentElement.style) ||
   (window.console &&
     (console.firebug || (console.exception && console.table))) ||
   (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) &&
     parseInt(RegExp.$1, 10) >= 31);
 
-exports.storage = (typeof chrome !== 'undefined' && chrome.storage !== undefined
+debug_extended.storage = (chrome && chrome.storage
   ? chrome.storage.local
   : (() => {
       try {
@@ -87,7 +92,7 @@ exports.storage = (typeof chrome !== 'undefined' && chrome.storage !== undefined
       } catch {}
     })()) as Storage;
 
-exports.colors = [
+debug_extended.colors = [
   'lightseagreen',
   'forestgreen',
   'goldenrod',
@@ -96,10 +101,8 @@ exports.colors = [
   'crimson'
 ] as string[];
 
-exports.formatters.j = function(value: any): string {
-  return JSON.stringify(value);
-};
+debug_extended.stringify = (value: any) => JSON.stringify(value);
 
-debug.enable(load());
+debug_extended.enable(load());
 
-export default exports;
+export default debug_extended;

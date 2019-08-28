@@ -5,7 +5,7 @@ const copyProperties = (
   target = target || {};
 
   if (process.env.NODE_ENV !== 'production') {
-    if (f) {
+    if (sources.length > 5) {
       throw new Error('Too many arguments passed to copyProperties');
     }
   }

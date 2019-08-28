@@ -42,7 +42,7 @@ function fetchWithRetries(
       requestsAttempted++;
       requestStartTime = Date.now();
       let isRequestAlive = true;
-      const request = fetch(uri, init);
+      const request = fetch(uri, init as RequestInit);
       const requestTimeout = setTimeout(() => {
         isRequestAlive = false;
 

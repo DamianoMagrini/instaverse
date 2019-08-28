@@ -45,8 +45,8 @@ export const isFetching = (data = DEFAULT_PAGE_DATA) => data.isFetching;
 
 interface FetchData {
   type: string;
-  visibleTarget: number;
-  isFetching: boolean;
+  visibleTarget?: number;
+  isFetching?: boolean;
 }
 
 export const generatePaginationActionCreators = ({
@@ -66,17 +66,22 @@ export const generatePaginationActionCreators = ({
   queryId?:
     | string
     | {
-        (id: string, fetch_mutual: boolean): string;
+        (id: string, fetch_mutual: boolean, a, b, c, d): string;
       };
-  queryParams?: (id: string, fetch_mutual: boolean) => object;
+  queryParams?: (id: string, fetch_mutual: boolean, a, b, c, d) => object;
   queryOptions?;
   queryBefore?;
   onUpdate?: (
     fetch: FetchData,
     data,
-    userId: string
+    userId: string,
+    a,
+    b,
+    c,
+    d,
+    e?
   ) => {
-    type;
+    type: string;
     listType;
     userId;
     users;
@@ -87,9 +92,14 @@ export const generatePaginationActionCreators = ({
   onError?: (
     error: any,
     fetch: FetchData,
-    userId: string
+    userId: string,
+    a,
+    b,
+    c,
+    d,
+    e
   ) => {
-    type;
+    type: string;
     listType;
     userId;
     fetch;

@@ -84,3 +84,9 @@ declare const IG_LITE_JS_BRIDGE_DEBUG: {
   getDevServer: () => void;
   setDevServer: (address: string) => void;
 };
+
+declare const process:
+  | {
+      env: { [key: string]: string };
+    }
+  | undefined;

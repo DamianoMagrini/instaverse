@@ -23,7 +23,7 @@ function shouldPolyfillES6Collection(collectionName: string): boolean {
   // we'll be using custom "@@iterator" instead, which is not implemented on
   // native collections.
 
-  if (typeof global.Symbol !== 'function') {
+  if (typeof Symbol !== 'function') {
     return true;
   }
 

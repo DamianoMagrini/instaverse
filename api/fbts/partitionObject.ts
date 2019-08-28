@@ -5,35 +5,23 @@ import forEachObject from './forEachObject';
  * are part of the first returned object, and all elements that don't are in the
  * second.
  */
-function partitionObject<Tv>(
-  object: {
-    [key: string]: Tv;
-  },
-  callback: (
-    value: Tv,
+function partitionObject<ValueType>(
+  object: { [key: string]: ValueType },
+  get_partition: (
+    value: ValueType,
     key: string,
-    object: {
-      [key: string]: Tv;
-    }
+    object: { [key: string]: ValueType }
   ) => boolean,
-  context?: any
-): [
-  {
-    [key: string]: Tv;
-  },
-  {
-    [key: string]: Tv;
-  }
-] {
-  var first = {};
-  var second = {};
+  thisArg?: any
+): [{ [key: string]: ValueType }, { [key: string]: ValueType }] {
+  const first = {};
+  const second = {};
+
   forEachObject(object, (value, key) => {
-    if (callback.call(context, value, key, object)) {
-      first[key] = value;
-    } else {
-      second[key] = value;
-    }
+    if (get_partition.call(thisArg, value, key, object)) first[key] = value;
+    else second[key] = value;
   });
+
   return [first, second];
 }
 

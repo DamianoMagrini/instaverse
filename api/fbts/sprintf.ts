@@ -17,8 +17,9 @@
  * @param args the values to insert
  * @return the replaced string
  */
-function sprintf(format: string, ...args: string[]): string {
+function sprintf(format: string, ...args: (string | number)[]): string {
   let index = 0;
+  // @ts-ignore You're going to be alright!
   return format.replace(/%s/g, () => args[index++]);
 }
 

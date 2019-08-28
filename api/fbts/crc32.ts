@@ -277,7 +277,7 @@ var table = [
   0x2d02ef8d
 ];
 
-if (global.Int32Array !== undefined) {
+if (Int32Array !== undefined) {
   // @ts-ignore
   table = new Int32Array(table);
 }

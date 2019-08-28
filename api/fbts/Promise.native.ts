@@ -1,6 +1,6 @@
-import Promise from 'promise/setimmediate/es6-extensions';
+import Promise from 'promise';
 
-require('promise/setimmediate/done');
+import 'promise/setimmediate/done';
 
 /**
  * Handle either fulfillment or rejection with the same callback.

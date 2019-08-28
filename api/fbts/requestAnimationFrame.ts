@@ -6,4 +6,4 @@
  *
  * @providesModule requestAnimationFrame
  */
-export default require('./requestAnimationFramePolyfill');
+export { default } from './requestAnimationFramePolyfill';

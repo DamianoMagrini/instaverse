@@ -3,13 +3,13 @@ import invariant from './invariant';
 /**
  * Checks if a value is empty.
  */
-function isEmpty(value: unknown): boolean {
-  if (Array.isArray(value)) {
+function isEmpty(value: any): boolean {
+  if (value instanceof Array) {
     return value.length === 0;
   } else if (typeof value === 'object') {
     if (value) {
       invariant(
-        !isIterable(value) || value.size === undefined,
+        !isIterable(value) || 'size' in value,
         'isEmpty() does not support iterable collections.'
       );
 

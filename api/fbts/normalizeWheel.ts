@@ -106,10 +106,7 @@ const PAGE_HEIGHT = 800;
  *         Firefox v4/Win7  |     undefined    |       3
  *
  */
-function normalizeWheel(
-  /*object*/
-  event
-) {
+function normalizeWheel(event: { [key: string]: any }) {
   /*object*/
   let sX = 0,
     sY = 0,

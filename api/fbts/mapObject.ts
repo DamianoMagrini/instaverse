@@ -1,4 +1,4 @@
-var hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 /**
  * Executes the provided `callback` once for each enumerable own property in the
@@ -22,24 +22,24 @@ var hasOwnProperty = Object.prototype.hasOwnProperty;
  * @param {*} context
  * @return {?object}
  */
-function mapObject(
-  object: object | null,
+function mapObject<Keys extends string | number, Values>(
+  object: { [key in Keys]: Values },
   callback: Function,
   context?: any
-): object | null {
+): { [key in Keys]: Values } {
   if (!object) {
     return null;
   }
 
-  var result = {};
+  const result: Partial<typeof object> = {};
 
-  for (var name in object) {
+  for (const name in object) {
     if (hasOwnProperty.call(object, name)) {
       result[name] = callback.call(context, object[name], name, object);
     }
   }
 
-  return result;
+  return result as typeof object;
 }
 
 export default mapObject;

@@ -8,11 +8,10 @@ import partitionObject from './partitionObject';
  * `whitelistObjectKeys`, but eventually keeping all the keys. Returns a tuple
  * of objects `[first, second]`.
  */
-function partitionObjectByKey(
-  source: Object,
+const partitionObjectByKey = (
+  source: { [key: string]: any },
   whitelist: Set<string>
-): [Object, Object] {
-  return partitionObject(source, (_, key) => whitelist.has(key));
-}
+): [{ [key: string]: any }, { [key: string]: any }] =>
+  partitionObject(source, (value, key) => whitelist.has(key));
 
 export default partitionObjectByKey;

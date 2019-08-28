@@ -133,10 +133,9 @@ const UserAgent = {
    *
    * @note Function results are memoized
    *
-   * @param {string} query Query of the form "Name"
-   * @return {boolean}
+   * @param query Query of the form "Name"
    */
-  isDevice(query) {
+  isDevice(query: string): boolean {
     return compare(UserAgentData.deviceName, null, query);
   },
 
@@ -159,10 +158,9 @@ const UserAgent = {
    *
    * @note Function results are memoized
    *
-   * @param {string} query Query of the form "Name [range expression]"
-   * @return {boolean}
+   * @param query Query of the form "Name [range expression]"
    */
-  isEngine(query) {
+  isEngine(query: string): boolean {
     return compare(
       UserAgentData.engineName,
       UserAgentData.engineVersion,
@@ -202,10 +200,9 @@ const UserAgent = {
    *
    * @note Function results are memoized
    *
-   * @param {string} query Query of the form "Name [range expression]"
-   * @return {boolean}
+   * @param query Query of the form "Name [range expression]"
    */
-  isPlatform(query) {
+  isPlatform(query: string): boolean {
     return compare(
       UserAgentData.platformName,
       UserAgentData.platformFullVersion,
@@ -219,11 +216,11 @@ const UserAgent = {
    *
    * @note Function results are memoized
    *
-   * @param {string} query Query of the form "32" or "64".
-   * @return {boolean}
+   * @param query Query of the form "32" or "64".
    */
-  isPlatformArchitecture(query) {
+  isPlatformArchitecture(query: string): boolean {
     return compare(UserAgentData.platformArchitecture, null, query);
   }
 };
+
 export default mapObject(UserAgent, memoizeStringOnly);

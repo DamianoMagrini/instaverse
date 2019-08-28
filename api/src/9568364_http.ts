@@ -15,12 +15,7 @@ import * as config from './9568270_config';
 import * as mid from './9699338_mid';
 import validate_http_request from './14876723_validate-http-request';
 import * as zero_rating from './9830424_zero-rating';
-// Don't ask. Just. Don't. Ask. If you know how, fix. But don't ask.
-import qwest, {
-  ExtendedResponse,
-  RequestOptions,
-  RequestPromise
-} from 'qwest/index';
+import qwest, { ExtendedResponse, RequestOptions, RequestPromise } from 'qwest';
 
 export interface ExtendedOptions extends RequestOptions {
   omitLanguageParam?: boolean;

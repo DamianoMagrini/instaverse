@@ -2,4 +2,10 @@
 // the actual function.
 
 import 'setimmediate';
-export default global.setImmediate;
+
+declare function setImmediate<Args extends Array<any>>(
+  callback: string | { (...args: Args): void },
+  ...args: Args
+): void;
+
+export default setImmediate;

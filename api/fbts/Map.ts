@@ -6,4 +6,4 @@
  *
  * @providesModule Map
  */
-export default require('core-js/library/es6/map');
+export { default } from 'core-js/library/es6/map';
