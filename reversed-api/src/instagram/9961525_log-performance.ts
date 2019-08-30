@@ -18,7 +18,7 @@
  *  - config (9568270)
  *  - page-ids (9568272)
  *  - ppr (11993123)
- *  - performance (former 9961516, now @fbts/performance)
+ *  - performance (former 9961516, now fbts/performance)
  *  - hash-32 (14876785)
  */
 
@@ -34,7 +34,7 @@ import passes_gatekeeper from './9568392_passes-gatekeeper';
 import * as config from './9568270_config';
 import page_ids from './9568272_page-ids';
 import * as ppr from './11993123_ppr';
-import performance from '@fbts/performance';
+import performance from '../fbts/performance';
 import get_intance_key from './14876785_get-instance-key';
 
 import { PostOptions } from './9568348_banzai';

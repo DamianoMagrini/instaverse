@@ -9,7 +9,7 @@
  *  - throw-error-async (9568361)
  *  - invariant-ex (9502825)
  *  - emptyFunction (former 65, which points to former 68, now
- *    @fbts/emptyFunction)
+ *    fbts/emptyFunction)
  *  - log-error (9568324)
  *  - normalize-page (14876784)
  */
@@ -17,7 +17,7 @@
 import * as api from './_starting-point-1_9568362_api';
 import throw_error_async from './9568361_throw-error-async';
 import invariant_ex from './9502825_invariant-ex';
-import emptyFunction from '@fbts/emptyFunction';
+import emptyFunction from '../fbts/emptyFunction';
 import log_error from './9568324_log-error';
 import normalize_page from './14876784_normalize-page';
 

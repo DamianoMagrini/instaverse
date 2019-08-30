@@ -1,4 +1,4 @@
-10289240: @fbts/invariant
+10289240: fbts/invariant
 14876673: ua-parser-js
 14876683: core-js/es6/map
 12: ms
@@ -7,12 +7,12 @@
 14876726: jquery-param
 14876724: qwest
 14876719: alea
-14942209: @fbts/ErrorUtils
-9502822: also @fbts/ErrorUtils
+14942209: fbts/ErrorUtils
+9502822: also fbts/ErrorUtils
 14942211: mixin-event-emitter
-9961516: @fbts/performance
+9961516: fbts/performance
 4: react-dom@16.8.6
 14876793: exif-js
 65: a module that returns [68]
-68: @fbts/emptyFunction
+68: fbts/emptyFunction
 2: immutable@4.0.0-rc.11

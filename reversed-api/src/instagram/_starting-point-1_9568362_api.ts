@@ -7,7 +7,7 @@
  *  - mid (9699338)
  *  - invariant-ex (9502825)
  *  - filter-object (10289286)
- *  - performance (former 9961516, now @fbts/performance)
+ *  - performance (former 9961516, now fbts/performance)
  *  - log-performance (9961525)
  *  - paths (9568262)
  *  - image-metadata (11927566)
@@ -24,7 +24,7 @@ import log_error from './9568324_log-error';
 import * as mid from './9699338_mid';
 import invariant_ex from './9502825_invariant-ex';
 import filter_object from './10289286_filter-object';
-import performance from '@fbts/performance';
+import performance from '../fbts/performance';
 import * as log_performance from './9961525_log-performance';
 import * as PATHS from './9568262_paths';
 import image_metadata from './11927566_image-metadata';
@@ -38,7 +38,7 @@ import uri from './9830509_uri';
 interface UserData {
   username?: string;
   first_name?: string;
-  biography?;
+  biography?: string;
   external_url?: string;
 
   captcha?;
@@ -53,7 +53,7 @@ interface UserData {
   gdpr_s?;
   tos_version?;
   phone_id?;
-  opt_into_one_tap?;
+  opt_into_one_tap?: boolean;
   big_blue_token?;
   fb_access_token?: string;
   profile_pic_size?;
@@ -67,7 +67,7 @@ interface UserData {
 interface UserDataInternal {
   username?: string;
   fullName?: string;
-  biography?;
+  biography?: string;
   external_url?: string;
 
   emailOrPhone?: string;
@@ -83,9 +83,9 @@ interface UserDataInternal {
   gdpr_s?;
   tosVersion?;
   phoneId?;
-  optIntoOneTap?;
+  optIntoOneTap?: boolean;
   big_blue_token?;
-  fb_access_token?;
+  fb_access_token?: string;
   profile_pic_size?;
   gender?;
   chaining_enabled?: 'on' | '';
@@ -107,10 +107,10 @@ interface Photo {
 }
 
 interface Video extends Photo {
-  isIgtvVideo: boolean;
+  isIgtvVideo?: boolean;
   uploadMediaDurationMs: number;
-  fileByteOffset: number;
-  videoTransform: string;
+  fileByteOffset?: number;
+  videoTransform?: string;
   mediaPublishMode: MEDIA_CONSTANTS.MediaPublishMode;
   chunkSize: number;
 }
@@ -313,16 +313,17 @@ export const uploadPhoto = without_blacklisted_cookies(
     upload_media(photo, before_request, MEDIA_CONSTANTS.MediaTypes.IMAGE)
 );
 
-function sign_up(
+const sign_up_internal = (
   user_data: UserDataInternal,
   dry_run: boolean,
   callback?: (xhr: XMLHttpRequest) => void
-) {
+) => {
   const { email, password, phoneNumber, username } = user_data;
   invariant_ex(
     (email !== null || phoneNumber !== null || username !== null) &&
       password !== null
   );
+
   const data: UserData = {
     captcha: user_data.captcha,
     email,
@@ -357,14 +358,14 @@ function sign_up(
     { timeout: SIGNUP_OPERATIONS_TIMEOUT },
     callback
   );
-}
+};
 
-function sign_up_with_fb(
+const sign_up_with_fb = (
   user_data: UserDataInternal,
   fb_access_token: string,
   is_attempt: boolean,
   before_request?: (xhr: XMLHttpRequest) => void
-) {
+) => {
   const data: UserData = {
     fb_access_token,
     first_name: user_data.fullName,
@@ -379,11 +380,11 @@ function sign_up_with_fb(
     { timeout: SIGNUP_OPERATIONS_TIMEOUT },
     before_request
   );
-}
+};
 
-function c() {
+const c = () => {
   return Date.now().toString();
-}
+};
 
 const get_whitelist_and_blacklist = (): {
   whitelist?: string[];
@@ -404,12 +405,12 @@ const filter_blacklisted_cookies = (
   whitelist: string[]
 ) => Object.keys(cookies_object).filter((name) => !whitelist.includes(name));
 
-function get_blacklisted_cookies(cookies_object: Cookies) {
+const get_blacklisted_cookies = (cookies_object: Cookies) => {
   const { whitelist, blacklist } = get_whitelist_and_blacklist();
   return whitelist.length > 0
     ? filter_blacklisted_cookies(cookies_object, whitelist)
     : blacklist;
-}
+};
 
 const backup_cookies_to_remove = (
   cookies_object: Cookies,
@@ -435,8 +436,9 @@ export const reelSeen = function(t, n) {
       reelMediaTakenAt: t.postedAt,
       viewSeenAt: t.postedAt
     })
-    .catch((t) => {
-      throw (log_error(t), t);
+    .catch((error) => {
+      log_error(error);
+      throw error;
     });
 };
 
@@ -449,9 +451,9 @@ export const ignoreFollowRequest = (t) =>
 export const followAll = (t) =>
   http.post('/web/friendships/follow_all/', { user_ids: t });
 
-export const showMany = (t) =>
+export const showMany = (user_ids: string[]) =>
   http.post('/web/friendships/show_many/', {
-    user_ids: t.join(',')
+    user_ids: user_ids.join(',')
   });
 
 export const likePost = (post_id: number) =>
@@ -474,91 +476,108 @@ export const fetchUnconsentedConsents = () =>
 
 export const acceptNewTerms = () => http.post('/terms/accept/');
 
-export const updateNewUserConsent = function(t, n) {
-  const { gdpr_s: o, dob: s, updates: c } = t,
-    u = { current_screen_key: n, ...s, gdpr_s: o };
-  return (
-    c && (u.updates = JSON.stringify(c)),
-    http.post('/web/consent/new_user_flow/', u)
+export const updateNewUserConsent = function(
+  new_data: { gdpr_s: any; dob: any; updates: any },
+  current_screen_key: string
+) {
+  // Note to myself: dob stands for date of birth (I keep forgetting it)
+  const { gdpr_s, dob, updates } = new_data;
+  const data = { current_screen_key, ...dob, gdpr_s };
+  if (updates) data.updates = JSON.stringify(updates);
+  return http.post('/web/consent/new_user_flow/', data);
+};
+
+export const updateConsentState = (updates: any, current_screen_key: string) =>
+  http.post('/web/consent/update/', {
+    updates: JSON.stringify(updates),
+    current_screen_key
+  });
+
+export const parentalConsentUpdate = function(
+  action: string,
+  pc_id: string,
+  nonce: number,
+  other_data: any,
+  first_name: string,
+  last_name: string
+) {
+  const parental_consent_data = {
+    nonce,
+    action,
+    ...other_data,
+    first_name,
+    last_name,
+    pc_id
+  };
+  return http.post(
+    '/web/consent/parental_consent_action/',
+    parental_consent_data
   );
 };
 
-export const updateConsentState = function(t, n) {
-  return http.post('/web/consent/update/', {
-    updates: JSON.stringify(t),
-    current_screen_key: n
-  });
-};
-
-export const parentalConsentUpdate = function(t, n, o, s, c, u) {
-  const _ = {
-    nonce: o,
-    action: t,
-    ...s,
-    first_name: c,
-    last_name: u,
-    pc_id: n
-  };
-  return http.post('/web/consent/parental_consent_action/', _);
-};
-
-export const sendDataDownloadEmail = (t) =>
-  http.post('/download/request_download_data_ajax/', t);
+export const sendDataDownloadEmail = (email: string) =>
+  http.post('/download/request_download_data_ajax/', email);
 
 export const resetConsentState = () =>
   http.post('/web/consent/reset_gdpr_consent/');
 
-export const updateConsentDob = function(t, n) {
-  return http.post('/web/consent/update_dob/', {
-    ...t,
-    current_screen_key: n
+export const updateConsentDob = (dob: any, current_screen_key: string) =>
+  http.post('/web/consent/update_dob/', {
+    ...dob,
+    current_screen_key
   });
-};
 
-export const sendParentalConsentEmail = function(t, n) {
-  return http.post('/web/consent/send_parental_consent_email/', {
-    guardian_email: t,
-    current_screen_key: n
+export const sendParentalConsentEmail = (
+  guardian_email: string,
+  current_screen_key: string
+) =>
+  http.post('/web/consent/send_parental_consent_email/', {
+    guardian_email,
+    current_screen_key
   });
-};
 
-export const skipParentalConsent = (t) =>
+export const skipParentalConsent = (current_screen_key: string) =>
   http.post('/web/consent/update/', {
     action: 'skip',
-    current_screen_key: t
+    current_screen_key
   });
 
-export const commentOnPost = function(t, n, o) {
-  return http.post('/web/comments/' + t + '/add/', {
-    comment_text: n,
-    replied_to_comment_id: o
+export const commentOnPost = function(
+  post_id: string, //? Or number?
+  comment_text: string,
+  replied_to_comment_id: string //? Or number?
+) {
+  return http.post('/web/comments/' + post_id + '/add/', {
+    comment_text,
+    replied_to_comment_id
   });
 };
 
-export const deleteCommentOnPost = function(t, n) {
-  return http.post('/web/comments/' + t + '/delete/' + n + '/');
-};
+export const deleteCommentOnPost = (t, n) =>
+  http.post('/web/comments/' + t + '/delete/' + n + '/');
 
-export const likeComment = (t) => http.post('/web/comments/like/' + t + '/');
+export const likeComment = (comment_id) =>
+  http.post('/web/comments/like/' + comment_id + '/');
 
-export const unlikeComment = (t) =>
-  http.post('/web/comments/unlike/' + t + '/');
+export const unlikeComment = (comment_id) =>
+  http.post('/web/comments/unlike/' + comment_id + '/');
 
-export const changeProfilePic = function(t, o) {
-  const s = new FormData();
-  return (
-    s.append('profile_pic', t, 'profilepic.jpg'),
-    http.post(
-      '/accounts/web_change_profile_picture/',
-      s,
-      { dataType: 'formdata', timeout: CHANGE_PROFILE_PIC_TIMEOUT },
-      o
-        ? generate_before_request_cb(
-            o,
-            transferProgressObjectToOptimisticPercent
-          )
-        : undefined
-    )
+export const changeProfilePic = function(
+  picture: string | Blob,
+  callback: (processed_data: number) => void
+) {
+  const new_picture = new FormData();
+  new_picture.append('profile_pic', picture, 'profilepic.jpg');
+  return http.post(
+    '/accounts/web_change_profile_picture/',
+    new_picture,
+    { dataType: 'formdata', timeout: CHANGE_PROFILE_PIC_TIMEOUT },
+    callback
+      ? generate_before_request_cb(
+          callback,
+          transferProgressObjectToOptimisticPercent
+        )
+      : undefined
   );
 };
 
@@ -568,11 +587,10 @@ export const removeProfilePic = () =>
 export const syncProfilePic = () =>
   http.post('/accounts/web_sync_profile_picture/', {});
 
-export const logout = function(t, n) {
-  return http.post('/accounts/logout/ajax/', {
-    one_tap_app_login: n ? 1 : 0
+export const logout = (_: any, enable_one_tap: boolean) =>
+  http.post('/accounts/logout/ajax/', {
+    one_tap_app_login: enable_one_tap ? 1 : 0
   });
-};
 
 export const requestSignupSMSCode = function(t, n, o, s) {
   return http.post(
@@ -590,8 +608,8 @@ export const validateSignupSMSCode = function(t, n, o) {
   );
 };
 
-export const requestUIGContactPrefillInformation = function(t, n) {
-  return http.post(
+export const requestUIGContactPrefillInformation = (t, n) =>
+  http.post(
     '/accounts/contact_point_prefill/',
     {
       device_id: mid.getMID(),
@@ -600,23 +618,32 @@ export const requestUIGContactPrefillInformation = function(t, n) {
     },
     { timeout: SIGNUP_OPERATIONS_TIMEOUT }
   );
+
+export const signup = (user_data: UserDataInternal) =>
+  sign_up_internal(user_data, false);
+
+export const signupDryRun = (
+  user_data: UserDataInternal,
+  callback?: (xhr: XMLHttpRequest) => void
+) => sign_up_internal(user_data, true, callback);
+
+export const signupWithFB = (
+  user_data: UserDataInternal,
+  fb_access_token?: string
+) => sign_up_with_fb(user_data, fb_access_token, false);
+
+export const signupWithFBDryRun = function(
+  user_data: UserDataInternal,
+  fb_access_string: string,
+  o: (xhr: XMLHttpRequest) => void
+) {
+  return sign_up_with_fb(user_data, fb_access_string, true, o);
 };
 
-export const signup = (t) => sign_up(t, false);
-
-export const signupDryRun = function(t, n) {
-  return sign_up(t, true, n);
-};
-
-export const signupWithFB = function(t, n) {
-  return sign_up_with_fb(t, n, false);
-};
-
-export const signupWithFBDryRun = function(t, n, o) {
-  return sign_up_with_fb(t, n, true, o);
-};
-
-export const connectAccountToFB = (fb_access_token, profile_pic_size) => {
+export const connectAccountToFB = (
+  fb_access_token: string,
+  profile_pic_size
+) => {
   const data: UserData = { fb_access_token };
   if (profile_pic_size !== null) data.profile_pic_size = profile_pic_size;
   return http.post('/fb/connect/ajax/', data, {
@@ -624,9 +651,14 @@ export const connectAccountToFB = (fb_access_token, profile_pic_size) => {
   });
 };
 
-export const login = function(username, password, queryParams, optIntoOneTap) {
+export const login = function(
+  username: string,
+  password: string,
+  queryParams?: any,
+  optIntoOneTap?: boolean
+) {
   return http.post(
-    '/accounts/login/ajax/',
+    'https://www.instagram.com/accounts/login/ajax/',
     { username, password, queryParams, optIntoOneTap },
     { timeout: LOGIN_OPERATIONS_TIMEOUT }
   );
@@ -671,12 +703,11 @@ export const sendTwoFactorEnableCode = (t) =>
 export const disableTwoFactorAuth = () =>
   http.post('/accounts/two_factor_authentication/ajax/disable/');
 
-export const enableTwoFactorAuth = function(t, n) {
-  return http.post('/accounts/two_factor_authentication/ajax/enable/', {
+export const enableTwoFactorAuth = (t, n) =>
+  http.post('/accounts/two_factor_authentication/ajax/enable/', {
     confirmation_code: n,
     phone_number: t
   });
-};
 
 export const disableTotpTwoFactorAuth = () =>
   http.post('/accounts/two_factor_authentication/disable_totp/');
@@ -701,7 +732,7 @@ export const loginTwoFactor = function(
   username: string,
   verificationCode: string,
   identifier: string,
-  queryParams
+  queryParams: any
 ) {
   return http.post(
     '/accounts/login/ajax/two_factor/',
@@ -718,13 +749,12 @@ export const loginTwoFactor = function(
 export const shouldRateLimitTwoFactorLoginSms = (t) =>
   t !== null && Date.now() - t < TWO_FACTOR_AUTH_SMS_MIN_DELAY;
 
-export const sendTwoFactorLoginSms = function(t, n) {
-  return http.post(
+export const sendTwoFactorLoginSms = (t, n) =>
+  http.post(
     '/accounts/send_two_factor_login_sms/',
     { username: t, identifier: n },
     { timeout: LOGIN_OPERATIONS_TIMEOUT }
   );
-};
 
 export const loginWithFB = (t) =>
   http.post('/accounts/login/ajax/facebook/', t, {
@@ -773,14 +803,14 @@ export const isContactTaken = function(check_email, check_phone) {
     }));
 };
 
-export const fetchFBInfo = (t) => http.post('/accounts/fb_profile/', t);
+export const fetchFBInfo = (profile_id) =>
+  http.post('/accounts/fb_profile/', profile_id);
 
-export const getUsernameSuggestions = function(t, n) {
-  return http.post('/accounts/username_suggestions/', {
+export const getUsernameSuggestions = (t, n) =>
+  http.post('/accounts/username_suggestions/', {
     email: t,
     name: n
   });
-};
 
 export const query = async (
   query_hash: string,
@@ -809,34 +839,31 @@ export const query = async (
   return response;
 };
 
-export const setEmailPreference = function(t, n) {
-  return http.post(PATHS.EMAIL_PREFERENCES_PATH, {
+export const setEmailPreference = (t, n) =>
+  http.post(PATHS.EMAIL_PREFERENCES_PATH, {
     [t]: n ? 'subscribe' : 'unsubscribe'
   });
-};
 
 export const setCommentFilteringConfig = (t) =>
   http.post('/accounts/set_comment_filter_web/', {
     config_value: t ? 1 : 0
   });
 
-export const saveCommentFilteringKeywords = (t) =>
-  http.post('/accounts/set_comment_filter_keywords_web/', {
-    keywords: t
-  });
+export const saveCommentFilteringKeywords = (keywords) =>
+  http.post('/accounts/set_comment_filter_keywords_web/', { keywords });
 
-export const saveProfile = function(t) {
-  const n: UserData = {
-    first_name: t.fullName,
-    email: t.email,
-    username: t.username,
-    phone_number: t.phoneNumber,
-    biography: t.bio,
-    external_url: t.website,
-    chaining_enabled: t.chainingEnabled ? 'on' : ''
+export const saveProfile = function(new_data) {
+  const data: UserData = {
+    first_name: new_data.fullName,
+    email: new_data.email,
+    username: new_data.username,
+    phone_number: new_data.phoneNumber,
+    biography: new_data.bio,
+    external_url: new_data.website,
+    chaining_enabled: new_data.chainingEnabled ? 'on' : ''
   };
-  t.gender !== null && (n.gender = String(t.gender));
-  return http.post(PATHS.PROFILE_EDIT_PATH, n);
+  new_data.gender !== null && (data.gender = String(new_data.gender));
+  return http.post(PATHS.PROFILE_EDIT_PATH, data);
 };
 
 export const changePassword = function(t, n, o) {
@@ -886,20 +913,17 @@ export const dismissChainingSuggestion = function(target_id, chaining_user_id) {
 export const dismissAysfSuggestion = (t) =>
   http.post('/web/discover/aysf_dismiss/', { target_id: t });
 
-export const deactivateAccount = function(t, n) {
-  return http.post('/accounts/remove/request/temporary/', {
+export const deactivateAccount = (t, n) =>
+  http.post('/accounts/remove/request/temporary/', {
     'deletion-reason': t,
     password: n
   });
-};
 
-export const loadLocationsDirectoryMoreCities = function(t, n) {
-  return http.post(`${PATHS.LOCATIONS_PATH}${t}/`, { page: n });
-};
+export const loadLocationsDirectoryMoreCities = (t, n) =>
+  http.post(`${PATHS.LOCATIONS_PATH}${t}/`, { page: n });
 
-export const loadLocationsDirectoryMoreLocations = function(t, n) {
-  return http.post(`${PATHS.LOCATIONS_PATH}${t}/`, { page: n });
-};
+export const loadLocationsDirectoryMoreLocations = (t, n) =>
+  http.post(`${PATHS.LOCATIONS_PATH}${t}/`, { page: n });
 
 export const loadLocationsDirectoryMoreCountries = (t) =>
   http.post(PATHS.LOCATIONS_PATH, { page: t });
@@ -952,12 +976,11 @@ export const creationFinalizeMedia = function(t, n, o, s, c, u, _ = null) {
   );
 };
 
-export const creationFinalizeStory = function(t, n) {
-  return http.post('/create/configure_to_story/', {
+export const creationFinalizeStory = (t, n) =>
+  http.post('/create/configure_to_story/', {
     upload_id: t,
     caption: n
   });
-};
 
 export const creationLoadSuggestedGeoTags = (t) =>
   http.get('/location_search/', {
@@ -985,8 +1008,8 @@ export const extractTwoFactorChallengeIfPresent = function(t) {
   return null;
 };
 
-export const fetchBatchQuickPromotions = function(t, n) {
-  return http.post(
+export const fetchBatchQuickPromotions = (t, n) =>
+  http.post(
     '/qp/batch_fetch_web/',
     {
       surfaces_to_queries: JSON.stringify(t),
@@ -996,17 +1019,15 @@ export const fetchBatchQuickPromotions = function(t, n) {
     {},
     n
   );
-};
 
 export const markDiscoverPageSeen = () =>
   http.post('/web/discover/mark_su_seen/');
 
-export const contactInvitesOptOut = function(t, n) {
-  return http.post('/invites/contact_optout_confirmed/', {
+export const contactInvitesOptOut = (t, n) =>
+  http.post('/invites/contact_optout_confirmed/', {
     hashed_contact: t,
     signature: n
   });
-};
 
 export const setDisallowStoryReshare = (t) =>
   http.post('/users/set_disallow_story_reshare_web/', {
@@ -1165,12 +1186,11 @@ export const phoneConfirmSendSmsCode = (t) =>
     phone_number: t
   });
 
-export const phoneConfirmVerifySmsCode = function(t, n) {
-  return http.post('/accounts/phone_confirm_verify_sms_code/', {
+export const phoneConfirmVerifySmsCode = (t, n) =>
+  http.post('/accounts/phone_confirm_verify_sms_code/', {
     phone_number: t,
     verification_code: n
   });
-};
 
 export const postPermissionDialogResult = function(t, n, o, s, c) {
   const u = new uri('/oauth/authorize');

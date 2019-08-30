@@ -4,8 +4,8 @@ import EventHolder from './EventHolder';
 import EventValidator from './EventValidator';
 
 import copyProperties from './copyProperties';
-import invariant from '@fbts/invariant';
-import keyOf from '@fbts/keyOf';
+import invariant from '../fbts/invariant';
+import keyOf from '../fbts/keyOf';
 
 const TYPES_KEY = keyOf({ __types: true });
 
@@ -35,40 +35,47 @@ function mixInEventEmitter(cls, types): void {
 }
 
 const EventEmitterMixin = {
-  emit: (eventType, a, b, c, d, e, _) =>
-    this.__getEventEmitter().emit(eventType, a, b, c, d, e, _),
+  emit(eventType, a, b, c, d, e, _) {
+    return this.__getEventEmitter().emit(eventType, a, b, c, d, e, _);
+  },
 
-  emitAndHold: (eventType, a, b, c, d, e, _) =>
-    this.__getEventEmitter().emitAndHold(eventType, a, b, c, d, e, _),
+  emitAndHold(eventType, a, b, c, d, e, _) {
+    return this.__getEventEmitter().emitAndHold(eventType, a, b, c, d, e, _);
+  },
 
-  addListener: (eventType, listener, context) =>
-    this.__getEventEmitter().addListener(eventType, listener, context),
+  addListener(eventType, listener, context) {
+    return this.__getEventEmitter().addListener(eventType, listener, context);
+  },
 
-  once: (eventType, listener, context) =>
-    this.__getEventEmitter().once(eventType, listener, context),
+  once(eventType, listener, context) {
+    return this.__getEventEmitter().once(eventType, listener, context);
+  },
 
-  addRetroactiveListener: (eventType, listener, context) =>
-    this.__getEventEmitter().addRetroactiveListener(
+  addRetroactiveListener(eventType, listener, context) {
+    return this.__getEventEmitter().addRetroactiveListener(
       eventType,
       listener,
       context
-    ),
+    );
+  },
 
-  addListenerMap: (listenerMap, context) =>
-    this.__getEventEmitter().addListenerMap(listenerMap, context),
+  addListenerMap(listenerMap, context) {
+    return this.__getEventEmitter().addListenerMap(listenerMap, context);
+  },
 
-  addRetroactiveListenerMap: (listenerMap, context) =>
-    this.__getEventEmitter().addListenerMap(listenerMap, context),
+  addRetroactiveListenerMap(listenerMap, context) {
+    return this.__getEventEmitter().addListenerMap(listenerMap, context);
+  },
 
-  removeAllListeners: () => {
+  removeAllListeners() {
     this.__getEventEmitter().removeAllListeners();
   },
 
-  removeCurrentListener: () => {
+  removeCurrentListener() {
     this.__getEventEmitter().removeCurrentListener();
   },
 
-  releaseHeldEventType: (eventType) => {
+  releaseHeldEventType(eventType) {
     this.__getEventEmitter().releaseHeldEventType(eventType);
   },
 

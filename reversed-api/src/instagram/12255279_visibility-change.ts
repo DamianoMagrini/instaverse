@@ -5,13 +5,13 @@
  *
  * Dependencies:
  *  - mixinEventEmitter (former 14942211, now mixin-event-emitter)
- *  - ErrorUtils (former 9502822, now @fbts/ErrorUtils)
+ *  - ErrorUtils (former 9502822, now fbts/ErrorUtils)
  */
 
-import mixinEventEmitter from 'mixin-event-emitter';
-import ErrorUtils from '@fbts/ErrorUtils';
+import mixinEventEmitter from '../mixin-event-emitter';
+import ErrorUtils from '../fbts/ErrorUtils';
 
-import EventEmitter from 'mixin-event-emitter/EventEmitter';
+import EventEmitter from '../mixin-event-emitter/EventEmitter';
 
 let hidden_event_name: string, visibility_change_event_name: string;
 

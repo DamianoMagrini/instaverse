@@ -5,10 +5,10 @@
  * "Percentage Photo Rendered" (as can be seen in 9961525).
  *
  * Dependencies:
- *  - performance (former 9961516, now @fbts/performance)
+ *  - performance (former 9961516, now fbts/performance)
  */
 
-import performance from '@fbts/performance';
+import performance from '../fbts/performance';
 
 export interface PPR {
   isGridView: boolean;

@@ -1,0 +1,22 @@
+{
+  "include": ["src/**/*.ts"],
+
+  "compilerOptions": {
+    "baseUrl": "./",
+    "sourceMap": true,
+    "outDir": "build",
+
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["dom", "esnext"],
+
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+
+    "paths": {
+      "*": ["@types/*", "node_modules/@types/*", "node_modules/*/index.d.ts"]
+    }
+  }
+}

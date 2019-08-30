@@ -6,7 +6,7 @@
  * Utilities to measure timings.
  *
  * Dependencies:
- *  - performance (former 9961516, now @fbts/performance)
+ *  - performance (former 9961516, now fbts/performance)
  *  - user-agent (9568276)
  *  - ig-lite-bindings (9830461)
  */
@@ -19,7 +19,7 @@
   (window && window.performance && window.performance.timing) || undefined
 */
 
-import performance from '@fbts/performance';
+import performance from '../fbts/performance';
 import * as user_agent from './9568276_user-agent';
 import * as ig_lite_bindings from './9830461_ig-lite-bindings';
 

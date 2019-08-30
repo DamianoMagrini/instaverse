@@ -8,7 +8,7 @@
  *  - banzai-shared (14876728)
  *  - random-6-char-string (9830466)
  *  - config (9568270)
- *  - ErrorUtils (former, 9502822, now @fbts/ErrorUtils)
+ *  - ErrorUtils (former, 9502822, now fbts/ErrorUtils)
  *  - event-logging (14876729)
  *  - banzai-actions-constants (9568349)
  *  - mid (9699338)
@@ -23,7 +23,7 @@ import is_frame from './14876727_is-frame';
 import * as banzai_shared from './14876728_banzai-shared';
 import random_6_char_string from './9830466_random-6-char-string';
 import * as config from './9568270_config';
-import ErrorUtils from '@fbts/ErrorUtils';
+import ErrorUtils from '../fbts/ErrorUtils';
 import * as event_logging from './14876729_event-logging';
 import * as BANZAI_ACTIONS_CONSTANTS from './9568349_banzai-actions-constants';
 import * as mid from './9699338_mid';

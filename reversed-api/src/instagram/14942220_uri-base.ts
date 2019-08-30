@@ -17,6 +17,9 @@ import invariant_ex from './9502825_invariant-ex';
 
 import { Serializer } from './14680200_query-serializer';
 
+const IS_UNSAFE_DOMAIN = /[\x00-\x2c\x2f\x3b-\x40\x5c\x5e\x60\x7b-\x7f\uFDD0-\uFDEF\uFFF0-\uFFFF\u2047\u2048\uFE56\uFE5F\uFF03\uFF0F\uFF1F]/;
+const IS_UNSAFE_PROTOCOL = /^(?:[^\/]*:|[\x00-\x1f]*\/[\x00-\x1f]*\/)/;
+
 function validate_and_set_props(
   uri: URIBase,
   uri_string: any,
@@ -41,15 +44,19 @@ function validate_and_set_props(
   uri_string = uri_string.toString().trim();
   const parsed_uri =
     uri_parser.parse(uri_string) || ({} as uri_parser.ParsedURI);
+
   if (!should_throw_errors && !URISchemes.isAllowed(parsed_uri.scheme))
     return false;
 
   uri.setProtocol(parsed_uri.scheme || '');
-  if (!should_throw_errors && s.test(parsed_uri.host)) return false;
+
+  if (!should_throw_errors && IS_UNSAFE_DOMAIN.test(parsed_uri.host))
+    return false;
 
   uri.setDomain(parsed_uri.host || '');
   uri.setPort(parsed_uri.port || '');
   uri.setPath(parsed_uri.path || '');
+
   if (should_throw_errors)
     uri.setQueryData(serializer.deserialize(parsed_uri.query) || {});
   else
@@ -61,6 +68,7 @@ function validate_and_set_props(
 
   uri.setFragment(parsed_uri.fragment || '');
   if (parsed_uri.fragment === '') uri.setForceFragmentSeparator(true);
+
   if (parsed_uri.userinfo !== null) {
     if (should_throw_errors)
       throw new Error(
@@ -71,6 +79,7 @@ function validate_and_set_props(
       );
     return false;
   }
+
   if (!uri.getDomain() && -1 !== uri.getPath().indexOf('\\')) {
     if (should_throw_errors)
       throw new Error(
@@ -81,7 +90,8 @@ function validate_and_set_props(
       );
     return false;
   }
-  if (!uri.getProtocol() && o.test(uri_string)) {
+
+  if (!uri.getProtocol() && IS_UNSAFE_PROTOCOL.test(uri_string)) {
     if (should_throw_errors)
       throw new Error(
         ex(
@@ -91,11 +101,9 @@ function validate_and_set_props(
       );
     return false;
   }
+
   return true;
 }
-
-const s = /[\\x00-\\x2c\\x2f\\x3b-\\x40\\x5c\\x5e\\x60\\x7b-\\x7f\\uFDD0-\\uFDEF\\uFFF0-\\uFFFF\\u2047\\u2048\\uFE56\\uFE5F\\uFF03\\uFF0F\\uFF1F]/;
-const o = /^(?:[^\/]*:|[\\x00-\\x1f]*\/[\\x00-\\x1f]*\/)/;
 
 type Filter = (uri_base: URIBase) => URIBase;
 const filters: Filter[] = [];
@@ -150,7 +158,7 @@ class URIBase {
     return this.getProtocol() === 'https';
   }
   setDomain(domain: string) {
-    if (s.test(domain))
+    if (IS_UNSAFE_DOMAIN.test(domain))
       throw new Error(
         ex(
           'URI.setDomain: unsafe domain specified: %s for url %s',

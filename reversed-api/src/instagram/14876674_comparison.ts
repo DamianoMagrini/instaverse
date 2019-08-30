@@ -5,10 +5,10 @@
  * regex), ranges and multiple conditions (using ||).
  *
  * Dependencies
- *  - invariant (former 10289240, now @fbts/invariant)
+ *  - invariant (former 10289240, now fbts/invariant)
  */
 
-import invariant from '@fbts/invariant';
+import invariant from '../fbts/invariant';
 
 const MATCH_DOT = /\./;
 const MATCH_DOUBLE_VERTICAL_BAR = /\|\|/;

@@ -100,7 +100,7 @@ function request(
 
   if (config.needsToConfirmCookies()) {
     const machine_id = mid.getMID();
-    machine_id && (request_options.headers['X-Mid'] = machine_id);
+    if (machine_id) request_options.headers['X-Mid'] = machine_id;
   }
 
   if (validate_http_request(method, url))
@@ -134,18 +134,21 @@ function request(
       if (preloadable && method === 'GET') preloading_get_request = false;
       return method_function;
     },
-    'GET' === method || 'HEAD' === method ? GET_RETRIES : 0
+    method === 'GET' || method === 'HEAD' ? GET_RETRIES : 0
   )
     .then(([xhr, response]) => response)
     .catch(
       ([error, xhr, response]: [Error, XMLHttpRequest, ExtendedResponse]) => {
-        if ('GET' !== method.toUpperCase()) {
+        if (method.toUpperCase() !== 'GET') {
           const redirect_url = get_redirect_url(xhr);
           if (redirect_url) {
             window.top.location.href = redirect_url;
             return new Promise(() => null);
           }
         }
+
+        console.log({ error, xhr, response });
+
         return Promise.reject(
           new AjaxError(
             xhr && xhr.statusText,
@@ -155,7 +158,7 @@ function request(
           )
         );
       }
-    );
+    ) as Promise<ExtendedResponse>;
 }
 
 const run_request = async (
@@ -211,7 +214,7 @@ export class AjaxError extends Error {
 
     try {
       response_object = JSON.parse(response_string || '');
-    } catch (t) {
+    } catch {
       response_object = null;
     }
 

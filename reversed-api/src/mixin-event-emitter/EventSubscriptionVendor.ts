@@ -1,4 +1,4 @@
-import invariant from '@fbts/invariant';
+import invariant from '../fbts/invariant';
 
 class EventSubscriptionVendor {
   _subscriptionsForType: { [key: string]: any };

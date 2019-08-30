@@ -1,4 +1,4 @@
-import invariant from '@fbts/invariant';
+import invariant from '../fbts/invariant';
 
 class EventHolder {
   _heldEvents: { [key: string]: any };

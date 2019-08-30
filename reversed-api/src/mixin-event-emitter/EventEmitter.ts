@@ -1,8 +1,8 @@
 import EmitterSubscription from './EmitterSubscription';
 import EventSubscriptionVendor from './EventSubscriptionVendor';
 
-import emptyFunction from '@fbts/emptyFunction';
-import invariant from '@fbts/invariant';
+import emptyFunction from '../fbts/emptyFunction';
+import invariant from '../fbts/invariant';
 
 class EventEmitter {
   _subscriber: EventSubscriptionVendor;

@@ -15,7 +15,9 @@
   },
 
 
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
 
 
   "dependencies": {
@@ -39,7 +41,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/ua-parser-js": "latest",
-    "ts-node": "latest",
+
     "typescript": "latest"
   }
 }

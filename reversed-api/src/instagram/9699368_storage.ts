@@ -5,11 +5,11 @@
  *
  * Dependencies:
  *  - ex (9502826)
- *  - ErrorUtils (former 14942209, now @fbts/ErrorUtils)
+ *  - ErrorUtils (former 14942209, now fbts/ErrorUtils)
  */
 
 import ex from './9502826_ex';
-import ErrorUtils from '@fbts/ErrorUtils';
+import ErrorUtils from '../fbts/ErrorUtils';
 
 let cached_properties = {};
 

@@ -2,10 +2,11 @@
  * @module cached
  *
  * Dependencies:
- *  - corejs/es6/map (former 14876683, now node_module)
+ *  - corejs/es6/map -> corejs/es/map -> { Map } from 'core-js' (former
+ *    14876683, now node_module)
  */
 
-import Map from 'core-js/es6/map';
+import { Map } from 'core-js';
 
 const EXPECTED_FUNCTION_ERROR = 'Expected a function';
 
@@ -17,7 +18,9 @@ function cached<Arguments extends Array<any>, Result>(
 ) {
   if (
     typeof function_to_cache !== 'function' ||
-    (index_generator !== null && typeof index_generator !== 'function')
+    (index_generator !== null &&
+      index_generator !== undefined &&
+      typeof index_generator !== 'function')
   )
     throw new TypeError(EXPECTED_FUNCTION_ERROR);
 
