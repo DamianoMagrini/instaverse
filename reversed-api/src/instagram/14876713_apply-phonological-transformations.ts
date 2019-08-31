@@ -29,14 +29,18 @@ const apply_phonological_transformations = (
 
   const conversation_blocks = text
     .replace(MATCH_SENTENCE, function($0: string, $1: string, $2: string) {
-      const o = transformations[$1];
-      if (o && typeof o === 'object') {
-        texts.push(o);
+      const transformation = transformations[$1];
+      if (transformation && typeof transformation === 'object') {
+        texts.push(transformation);
         puncts.push($1);
         return '' + $2;
-      } else if (o === null) {
+      } else if (transformation === null) {
         return '';
-      } else return o + (phonology.endsInPunct(o as string) ? '' : $2);
+      } else
+        return (
+          transformation +
+          (phonology.endsInPunct(transformation as string) ? '' : $2)
+        );
     })
     .split('')
     .map(phonology.applyPhonologicalRules);

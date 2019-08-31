@@ -32,10 +32,10 @@ function on_error(
   column: number,
   error_instance: Error
 ) {
-  if (processing_error)
-    return (
-      console.error('Error reported during error processing', message), false
-    );
+  if (processing_error) {
+    console.error('Error reported during error processing', message);
+    return false;
+  }
 
   processing_error = true;
   const normalized_error = extended_error.normalizeError(

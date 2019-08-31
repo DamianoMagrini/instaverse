@@ -31,6 +31,7 @@
     "react": "latest",
     "react-dom": "latest",
     "setimmediate": "latest",
+    "qs": "latest",
     "qwest": "latest",
     "ua-parser-js": "latest"
   },
@@ -40,6 +41,7 @@
     "@types/isomorphic-fetch": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/qs": "latest",
     "@types/ua-parser-js": "latest",
 
     "typescript": "latest"

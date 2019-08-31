@@ -23,11 +23,12 @@ import cookies_internal from './1_cookies-internal';
 import KNOWN_COOKIES from './9568400_known-cookies';
 import get_string from './9568260_get-string';
 
-interface Config {
+export interface Config {
   platform: PlatformType;
   country_code: string;
   knobs: { [key: string]: any };
-  deployment_stage;
+  // Either empty or "c1", don't really know what it means.
+  deployment_stage: string;
   is_canary: boolean;
   rollout_hash: string;
   mid_pct: number;
@@ -36,7 +37,7 @@ interface Config {
   language_code: string;
   cb: boolean;
   gatekeepers: { [key: string]: boolean };
-  qe: { [key: string]: boolean };
+  qe: { [qe: string]: { p: { [item: string]: boolean } } };
   locale: string;
   nonce: string;
   zero_data: {
@@ -175,12 +176,8 @@ export const getGraphTokenForApp = () =>
   user_agent.isIgLite()
     ? `${DEVICE_CONSTANTS.igLiteAppId}|${DEVICE_CONSTANTS.igLiteClientToken}`
     : user_agent.isDesktop()
-    ? `${DEVICE_CONSTANTS.instagramWebDesktopFBAppId}|${
-        DEVICE_CONSTANTS.instagramWebDesktopClientToken
-      }`
-    : `${DEVICE_CONSTANTS.instagramWebFBAppId}|${
-        DEVICE_CONSTANTS.instagramWebClientToken
-      }`;
+    ? `${DEVICE_CONSTANTS.instagramWebDesktopFBAppId}|${DEVICE_CONSTANTS.instagramWebDesktopClientToken}`
+    : `${DEVICE_CONSTANTS.instagramWebFBAppId}|${DEVICE_CONSTANTS.instagramWebClientToken}`;
 
 export const getPageEntrypoints = () =>
   Object.keys(with_config((config) => config.entry_data));

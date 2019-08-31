@@ -8,6 +8,8 @@
  * . . .
  * Also, for some reason, it's used in 9830424, which depends on config itself. Why.
  *
+ * It is also used in other modules that didn't fancy depending on config.
+ *
  * Dependencies:
  *  - config (9568270)
  */

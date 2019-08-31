@@ -58,7 +58,7 @@ interface WrappedEvent {
 }
 
 export interface PostOptions {
-  retry?: any;
+  retry?: boolean;
   callback?: any;
   delay?: any;
   signal?: any;

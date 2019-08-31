@@ -1,0 +1,3 @@
+# Instaverse Node API
+
+This folder contains a (partial) Node implementation of Instagram's API. This will likely remain unused in the short term (and quite possibly also the long term), but can serve as a reference for a future Dart in-app API (I'm more comfortable in JS/TS than Dart). Actually, I'm not even sure if I'll go further with this API client, as, if I find myself comfortable coding another client in Dart, I'll probably stay there.

@@ -1,0 +1,17 @@
+{
+  "include": ["src/**/*.ts"],
+
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "build",
+
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["esnext"],
+
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true
+  }
+}

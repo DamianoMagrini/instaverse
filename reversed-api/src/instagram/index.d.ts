@@ -40,11 +40,16 @@ interface Window {
   _cached_shared_Data?: any;
   _csrf_token?: any;
   __igExposedQEs?: any;
+  __igExposedQEX?: { [key: string]: boolean };
   _cstart?: number;
+  __additionalData?: { [key: string]: any };
 
   IG_LITE_JS_BRIDGE: IGLiteBridge;
   IG_LITE_JS_BRIDGE_DEBUG: any;
   perfMetrics: any;
+
+  // Deferred add to home screen prompt
+  defferedA2HSPrompt: Event;
 
   visualViewport: {
     scale: number;

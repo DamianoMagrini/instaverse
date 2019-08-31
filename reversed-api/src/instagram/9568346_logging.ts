@@ -116,8 +116,8 @@ export const getCurrentPageIdentifier = () => current_page_identifier;
 
 export const logAction_DEPRECATED = (
   name: string,
-  data: object,
-  options: banzai.PostOptions
+  data?: object,
+  options?: banzai.PostOptions
 ) => {
   const { url, ...other_extra } = get_extra(data);
   log_pigeon_event(
@@ -363,7 +363,7 @@ export const logConfigureMediaFailure = (data: object) => {
   });
 };
 
-export const logNotificationEvent = (name: string, data: object) => {
+export const logNotificationEvent = (name: string, data?: object) => {
   log_pigeon_event(
     events.createEvent('instagram_web_client_events', {
       event_name: name,
@@ -375,7 +375,7 @@ export const logNotificationEvent = (name: string, data: object) => {
 export const logNotificationErrorEvent = (
   name: string,
   data: Error,
-  extra_data: object
+  extra_data?: object
 ) => {
   log_pigeon_event(
     events.createEvent('instagram_web_client_events', {

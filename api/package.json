@@ -1,0 +1,29 @@
+{
+  "name": "instaverse-node-api",
+  "description": "Instagram's API, rebuilt from the ground up in Node.",
+  "version": "1.0.0",
+
+  "authors": "Damiano Magrini <damiano.magrini@gmail.com>",
+  "license": "CC-BY-NC-SA-4.0",
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DamianoMagrini/instaverse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DamianoMagrini/instaverse/issues"
+  },
+
+
+  "scripts": {
+    "build": "tsc"
+  },
+
+
+  "devDependencies": {
+    "@types/node": "latest",
+
+    "ts-node": "latest",
+    "typescript": "latest"
+  }
+}
